@@ -61,7 +61,7 @@ fn process_file(input_file_path: &str, output_file_path: &str, offset: i8) -> Re
 
     fs::rename(
         input_file_path,
-        input_file_path.clone().to_owned() + ".orig",
+        String::from(input_file_path) + ".orig",
     )
     .with_context(|| "An error occurred while taking a backup of the original file")?;
 
