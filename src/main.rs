@@ -12,7 +12,8 @@ use thiserror::Error;
 #[clap(
     version = "0.1.0",
     author = "abhayk <abhay.krishnan.dev@gmail.com>",
-    about = r#"A tool to add or subtract offsets to the timestamps in a .srt subtitle file. After offsets are applied the original file will be backed up to <file>.orig"#
+    about = r#"A tool to add or subtract offsets to the timestamps in a .srt subtitle file. 
+    After offsets are applied the original file will be backed up to <file>.orig"#
 )]
 #[clap(setting = AppSettings::ColoredHelp)]
 struct Opts {
@@ -48,22 +49,22 @@ fn process_file(input_file_path: &str, output_file_path: &str, offset: i8) -> Re
 
     let buffered = BufReader::new(input_file);
 
-    for line in buffered.lines() {
+    buffered.lines().try_for_each(|line| -> Result<()> {
         let line = line.with_context(|| "An error occured while reading the file")?;
-        let processed_line = match line.contains("-->") {
-            true => process_duration(&line, offset).with_context(|| {
+        let processed_line = if line.contains("-->") {
+            process_duration(&line, offset).with_context(|| {
                 format!("An error occurred while processing the line `{}`", line)
-            })?,
-            false => line,
+            })?
+        } else {
+            line
         };
-        writeln!(output_file, "{}", processed_line)?;
-    }
+        writeln!(output_file, "{}", processed_line)
+            .with_context(|| "An error occurred while writing to the output")?;
+        Ok(())
+    })?;
 
-    fs::rename(
-        input_file_path,
-        String::from(input_file_path) + ".orig",
-    )
-    .with_context(|| "An error occurred while taking a backup of the original file")?;
+    fs::rename(input_file_path, String::from(input_file_path) + ".orig")
+        .with_context(|| "An error occurred while taking a backup of the original file")?;
 
     fs::rename(output_file_path, input_file_path).with_context(|| {
         "An error occurred while trying to replace the original file with the udpated version"
