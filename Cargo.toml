@@ -11,7 +11,7 @@ keywords = ["cli", "subtitle"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = "3.0.0-beta.4"
+clap = "3.0.0-beta.5"
 anyhow = "1.0.44"
 chrono = "0.4"
 thiserror = "1.0"

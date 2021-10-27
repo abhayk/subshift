@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use chrono::{Duration, NaiveTime};
-use clap::{AppSettings, Clap};
+use clap::{Parser};
 use std::{
     fs,
     fs::File,
@@ -8,14 +8,13 @@ use std::{
 };
 use thiserror::Error;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap(
     version = "0.1.0",
     author = "abhayk <abhay.krishnan.dev@gmail.com>",
     about = r#"A tool to add or subtract offsets to the timestamps in a .srt subtitle file. 
     After offsets are applied the original file will be backed up to <file>.orig"#
 )]
-#[clap(setting = AppSettings::ColoredHelp)]
 struct Opts {
     #[clap(short, long, about = "The path to the subtitle file")]
     file: String,
