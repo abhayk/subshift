@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use chrono::{Duration, NaiveTime};
-use clap::{Parser};
+use clap::Parser;
 use std::{
     fs,
     fs::File,
