@@ -16,7 +16,7 @@ fn when_input_file_does_not_exist() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains("Could not read the file"));
+        .stderr(predicate::str::contains("Failed to read the input file"));
 
     Ok(())
 }
