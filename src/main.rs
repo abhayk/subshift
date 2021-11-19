@@ -81,7 +81,8 @@ fn apply_offset(input: &str, offset: i8) -> Result<String> {
 
 #[cfg(test)]
 mod tests {
-    use crate::apply_offset;
+
+    use crate::{apply_offset, process_duration};
 
     #[test]
     fn apply_offset_with_zero_offset() {
@@ -101,5 +102,18 @@ mod tests {
     #[test]
     fn apply_offset_with_invalid_format() {
         assert!(apply_offset("01:29:13:905", 10).is_err());
+    }
+
+    #[test]
+    fn process_duration_valid_input() {
+        assert_eq!(
+            process_duration("00:19:28,220 --> 00:19:29,753", 100, " --> ").unwrap(),
+            "00:19:28,320 --> 00:19:29,853"
+        )
+    }
+
+    #[test]
+    fn process_duration_invalid_input() {
+        assert!(process_duration("They're gonna send someone.", 100, " --> ").is_err());
     }
 }
